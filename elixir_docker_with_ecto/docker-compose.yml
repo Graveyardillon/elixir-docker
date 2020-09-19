@@ -1,14 +1,27 @@
 version: '3'
-
 services:
   app:
-    image: nicbet/phoenix:1.5.1
     build: .
     ports:
-      - "4567:4000"
+      - "4000:4000"
+    command: bash -c "mix phx.server"
+    environment:
+      - MIX_ENV=dev
+      - PORT=4000
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=elixir_docker_with_ecto_dev
+      - DATABASE_HOST=db
+      - DATABASE_URL=ecto://postgres:postgres@db/elixir_docker_with_ecto_dev
+      - SECRET_KEY_BASE=
     volumes:
-      - ./src:/app
+      - .:/app
     depends_on:
       - db
   db:
-    image: postgres:10
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=postgres
